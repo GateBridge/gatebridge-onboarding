@@ -10,7 +10,6 @@ import hexacloud.core.tui.TerminalUiFactory;
 import hexacloud.infra.gateway.GatewayFactory;
 
 import io.gatebridge.onboarding.controller.HealthCheckController;
-import io.gatebridge.onboarding.listener.TelemetryEventListener;
 
 /**
  * GateBridge Onboarding Application — Minimal production-ready Gateway starter template.
@@ -33,12 +32,23 @@ public class OnboardingApplication {
             }
         }
 
+        // 2. Resolve ingress port (reads $PORT or $GATEWAY_PORT env var, defaulting to 4000)
         int port = 4000;
+        String envPort = System.getenv("PORT");
+        if (envPort == null || envPort.trim().isEmpty()) {
+            envPort = System.getenv("GATEWAY_PORT");
+        }
+        if (envPort != null && !envPort.trim().isEmpty()) {
+            try {
+                port = Integer.parseInt(envPort.trim());
+            } catch (NumberFormatException ignored) {}
+        }
+
         int adminPort = 9090;
 
         System.out.println(">>> Bootstrapping GateBridge Gateway on port " + port + " (Admin: " + adminPort + ")...");
 
-        // 2. Programmatic Bootstrapping using GateBridge Core GatewayFactory API
+        // 3. Programmatic Bootstrapping using GateBridge Core GatewayFactory API
         GatewayBuilderPort builder = GatewayFactory.createGateway("onboarding-gateway")
                 .createCluster("default-cluster")
                 .port(port)
@@ -50,13 +60,13 @@ public class OnboardingApplication {
                 .performanceProfile(PerformanceProfile.BALANCED_1GB)
                 .registerController(new HealthCheckController());
 
-        // 3. Register upstream target server nodes
+        // 4. Register upstream target server nodes (if available)
         builder.registerServer(new ServerNode(
                 "http://localhost", 8080, NodeStatus.ONLINE, false,
                 PingProtocol.HTTP, "/health", null, null
         ));
 
-        // 4. Start listening and schedule backend health checks
+        // 5. Start listening and schedule backend health checks
         RunningGatewayPort gateway = builder.listen().startPingScheduler();
 
         System.out.println("\n==================================================================");
@@ -67,7 +77,7 @@ public class OnboardingApplication {
         System.out.println(" • Fast-Path Ping Endpoint: http://localhost:" + port + "/v1/ping");
         System.out.println("==================================================================\n");
 
-        // 5. Optional interactive DevOps TUI
+        // 6. Optional interactive DevOps TUI
         if (enableTui) {
             TerminalUiFactory.createTui("GateBridge DevOps Console")
                     .seedGateway(gateway)
@@ -75,7 +85,7 @@ public class OnboardingApplication {
                     .startToggleMode();
         }
 
-        // 6. Shutdown Hook for Graceful Teardown
+        // 7. Shutdown Hook for Graceful Teardown
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("\n>>> Shutting down GateBridge Gateway...");
             gateway.stop();
