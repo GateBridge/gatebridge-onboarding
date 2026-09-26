@@ -5,6 +5,7 @@ import hexacloud.core.model.PingProtocol;
 import hexacloud.core.model.ServerNode;
 import hexacloud.core.ports.GatewayBuilderPort;
 import hexacloud.core.ports.RunningGatewayPort;
+import hexacloud.core.server.HttpEngine;
 import hexacloud.core.server.PerformanceProfile;
 import hexacloud.core.tui.TerminalUiFactory;
 import hexacloud.infra.gateway.GatewayFactory;
@@ -60,6 +61,7 @@ public class OnboardingApplication {
                 .enableTelnet(enableTui)
                 .enableWs(true)
                 .pingInterval(5)
+                .httpEngine(HttpEngine.UNDERTOW)
                 .requireToken(false, null) // Token validation disabled for onboarding public routes
                 .performanceProfile(PerformanceProfile.BALANCED_1GB)
                 .registerController(new HealthCheckController());

@@ -14,7 +14,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <gatebridge.version>1.5.1-release-jdk21</gatebridge.version>
+        <gatebridge.version>1.5.4-release-jdk21</gatebridge.version>
     </properties>
 
     <repositories>
