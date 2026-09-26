@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  gatebridge-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gatebridge-onboarding-gateway
+    ports:
+      - "4000:4000"   # Ingress Gateway Port
+      - "9090:9090"   # Admin Console Port
+    environment:
+      - JAVA_OPTS=-Xms64m -Xmx256m
+    restart: unless-stopped
