@@ -32,29 +32,32 @@ public class OnboardingApplication {
             }
         }
 
-        // 2. Resolve ingress port (reads $PORT or $GATEWAY_PORT env var, defaulting to 4000)
-        int port = 4000;
+        // 2. Resolve target HTTP ingress port (reads $PORT or $GATEWAY_PORT env var, defaulting to 4000)
+        int httpPort = 4000;
         String envPort = System.getenv("PORT");
         if (envPort == null || envPort.trim().isEmpty()) {
             envPort = System.getenv("GATEWAY_PORT");
         }
         if (envPort != null && !envPort.trim().isEmpty()) {
             try {
-                port = Integer.parseInt(envPort.trim());
+                httpPort = Integer.parseInt(envPort.trim());
             } catch (NumberFormatException ignored) {}
         }
 
+        // GateBridge port offset: HTTP transport runs on (basePort + HTTP_PORT_OFFSET [1]).
+        // To ensure HTTP transport binds EXACTLY to httpPort ($PORT, e.g. 4011), we set basePort = httpPort - 1.
+        int basePort = httpPort - 1;
         int adminPort = 9090;
 
-        System.out.println(">>> Bootstrapping GateBridge Gateway on port " + port + " (Admin: " + adminPort + ")...");
+        System.out.println(">>> Bootstrapping GateBridge Gateway (HTTP Ingress Port: " + httpPort + ", Admin: " + adminPort + ")...");
 
         // 3. Programmatic Bootstrapping using GateBridge Core GatewayFactory API
         GatewayBuilderPort builder = GatewayFactory.createGateway("onboarding-gateway")
                 .createCluster("default-cluster")
-                .port(port)
+                .port(basePort)
                 .adminPort(adminPort)
                 .enableHttp(true)
-                .enableTelnet(true)
+                .enableTelnet(enableTui)
                 .enableWs(true)
                 .pingInterval(5)
                 .performanceProfile(PerformanceProfile.BALANCED_1GB)
@@ -71,10 +74,11 @@ public class OnboardingApplication {
 
         System.out.println("\n==================================================================");
         System.out.println(" GATEWAY READY!");
-        System.out.println(" • HTTP Ingress Gateway: http://localhost:" + port);
+        System.out.println(" • HTTP Ingress Gateway: http://localhost:" + httpPort);
         System.out.println(" • Admin Management API: http://localhost:" + adminPort);
-        System.out.println(" • Fast-Path Health Check: http://localhost:" + port + "/v1/health");
-        System.out.println(" • Fast-Path Ping Endpoint: http://localhost:" + port + "/v1/ping");
+        System.out.println(" • Fast-Path Root Route: http://localhost:" + httpPort + "/");
+        System.out.println(" • Fast-Path Health Check: http://localhost:" + httpPort + "/v1/health");
+        System.out.println(" • Fast-Path Ping Endpoint: http://localhost:" + httpPort + "/v1/ping");
         System.out.println("==================================================================\n");
 
         // 6. Optional interactive DevOps TUI
