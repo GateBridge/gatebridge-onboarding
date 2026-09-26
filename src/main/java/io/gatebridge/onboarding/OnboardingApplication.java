@@ -60,6 +60,7 @@ public class OnboardingApplication {
                 .enableTelnet(enableTui)
                 .enableWs(true)
                 .pingInterval(5)
+                .requireToken(false, null) // Token validation disabled for onboarding public routes
                 .performanceProfile(PerformanceProfile.BALANCED_1GB)
                 .registerController(new HealthCheckController());
 
