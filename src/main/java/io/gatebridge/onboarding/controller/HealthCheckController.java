@@ -11,10 +11,16 @@ import java.io.PrintWriter;
  */
 public class HealthCheckController implements RouteController {
 
+    @RouteMapping(value = "/", fastPath = true, isPublic = true)
+    public void root(String args, PrintWriter out) {
+        long timestamp = System.currentTimeMillis();
+        out.println("{\"status\":\"UP\",\"gateway\":\"GateBridge API Gateway\",\"message\":\"Welcome to GateBridge Onboarding Gateway!\",\"timestamp\":" + timestamp + "}");
+    }
+
     @RouteMapping(value = "/v1/health", fastPath = true, isPublic = true)
     public void healthCheck(String args, PrintWriter out) {
         long timestamp = System.currentTimeMillis();
-        out.println("{\"status\":\"HEALTHY\",\"service\":\"gatebridge-onboarding\",\"gateway\":\"GateBridge Core 1.4.9-release\",\"timestamp\":" + timestamp + "}");
+        out.println("{\"status\":\"HEALTHY\",\"service\":\"gatebridge-onboarding\",\"gateway\":\"GateBridge Core 1.5.0-release\",\"timestamp\":" + timestamp + "}");
     }
 
     @RouteMapping(value = "/v1/ping", fastPath = true, isPublic = true)
