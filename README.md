@@ -1,10 +1,10 @@
 # 🌉 GateBridge — Minimal Onboarding Starter
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![JitPack](https://img.shields.io/badge/JitPack-gatebridge--core-brightgreen)](https://jitpack.io/#GateBridge/gatebridge)
+[![JitPack](https://img.shields.io/badge/JitPack-gatebridge--core-brightgreen)](https://jitpack.io/#GateBridge/GateBridge)
 [![Java 21+](https://img.shields.io/badge/Java-21%2B-orange.svg)](https://openjdk.org/projects/jdk/21/)
 
-**GateBridge Onboarding Starter** is the official minimal, functional boilerplate application for **[GateBridge API Gateway](https://github.com/GateBridge/gatebridge)**.
+**GateBridge Onboarding Starter** is the official minimal, functional boilerplate application for **[GateBridge API Gateway](https://github.com/GateBridge/GateBridge)**.
 
 Whenever you want to launch GateBridge in a new environment, cloud provider, or production server, simply **clone this repository** as your baseline starter project and extend it.
 
@@ -60,9 +60,9 @@ This onboarding template depends directly on `gatebridge-core` via Maven (`pom.x
 
 <dependencies>
     <dependency>
-        <groupId>io.hexacloud</groupId>
-        <artifactId>gatebridge-core</artifactId>
-        <version>1.4.9-release</version>
+        <groupId>com.github.GateBridge</groupId>
+        <artifactId>GateBridge</artifactId>
+        <version>1.5.0-release-jdk21</version>
     </dependency>
 </dependencies>
 ```

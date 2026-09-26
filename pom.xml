@@ -14,7 +14,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <gatebridge.version>1.4.9-release</gatebridge.version>
+        <gatebridge.version>1.5.0-release-jdk21</gatebridge.version>
     </properties>
 
     <repositories>
@@ -27,10 +27,10 @@
     </repositories>
 
     <dependencies>
-        <!-- GateBridge Core Gateway Dependency -->
+        <!-- GateBridge Core Gateway Dependency via JitPack -->
         <dependency>
-            <groupId>io.hexacloud</groupId>
-            <artifactId>gatebridge-core</artifactId>
+            <groupId>com.github.GateBridge</groupId>
+            <artifactId>GateBridge</artifactId>
             <version>${gatebridge.version}</version>
         </dependency>
 
